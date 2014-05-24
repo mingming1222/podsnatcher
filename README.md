@@ -23,10 +23,10 @@ MWFeedParser 解析 podcast 数据
 
 截图
 ---------------------------
-<img src=https://github.com/mingming1222/podsnatcher/tree/master/screenshots/settings.png width=210 height=372>
-<img src=https://github.com/mingming1222/podsnatcher/tree/master/screenshots/mainView.png width=210 height=372>
-<img src=https://github.com/mingming1222/podsnatcher/tree/master/screenshots/player.png width=210 height=372>
-<img src=https://github.com/mingming1222/podsnatcher/tree/master/screenshots/info.png width=210 height=372>
+<img src=https://github.com/mingming1222/podsnatcher/raw/master/screenshots/settings.png width=210 height=372>
+<img src=https://raw.github.com/mingming1222/podsnatcher/raw/master/screenshots/mainView.png width=210 height=372>
+<img src=https://github.com/mingming1222/podsnatcher/raw/master/screenshots/player.png width=210 height=372>
+<img src=https://github.com/mingming1222/podsnatcher/raw/master/screenshots/info.png width=210 height=372>
 
 
 TODO
