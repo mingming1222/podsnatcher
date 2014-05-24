@@ -10,7 +10,8 @@ core data 作为数据存储
 cocoapods 依赖管理  
 
 使用 FreeStreamer 播放引擎  
-MWFeedParser 解析 podcast 数据
+MWFeedParser 解析 podcast 数据  
+系统版本 iOS 7 或以上
 
 使用依赖
 ---------------------------
