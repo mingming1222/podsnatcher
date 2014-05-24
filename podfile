@@ -1,0 +1,6 @@
+platform :ios, '7'
+    pod 'MWFeedParser'
+    pod 'TTTAttributedLabel'
+    pod 'FreeStreamer'
+    pod 'SwipeView'
+    pod 'SVPullToRefresh'
