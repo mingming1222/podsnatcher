@@ -22,5 +22,6 @@
 @property (nonatomic, strong) JEProgressView *downloadProgressView;
 @property (nonatomic, weak) NSURLSessionDownloadTask *downloadTask;
 @property (nonatomic, strong) NSString *url;
+@property (nonatomic, strong) UILabel *playedTime;
 
 @end

@@ -8,6 +8,7 @@
 
 #import "PlayViewController.h"
 #import <FSAudioStream.h>
+#import "PlayViewControllerHelper.h"
 
 @interface PlayViewController ()
 @property (nonatomic, strong) UIButton *playButton;
@@ -23,7 +24,7 @@
 @property (nonatomic, strong) UISlider *progressSlider;
 
 @property (nonatomic, strong) NSTimer *progressUpdateTimer;
-@property (nonatomic, strong) NSURL *currentPlayURL;
+@property (nonatomic, strong) IGEpisode *currentEpisode;
 @property (nonatomic, assign) double longPressSeekToTime;
 @property (nonatomic, strong) NSTimer *longPressTimer;
 @property (nonatomic, assign) double seekToTime;
@@ -61,16 +62,21 @@
 {
     [super viewDidAppear:animated];
     
-    if (![self.currentPlayURL isEqual:self.url]) {
-        self.audioController.url = self.url;
-        self.currentPlayURL = self.url;
- 
+    if (![self.currentEpisode.url isEqual:self.url]) {
+
         if (self.audioController.isPlaying) {
+            
+            double s = self.audioController.stream.currentTimePlayed.minute * 60
+                                + self.audioController.stream.currentTimePlayed.second;
+            [self.delegate audioStreamWillStop:s withEpisode:self.currentEpisode];
             [self.audioController stop];
         }
+        
+        self.audioController.url = self.url;
+        self.currentEpisode = self.episode;
+ 
      
         [self.audioController play];
-        [self.delegate audioStreamDidPlay];
     }
 
     [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
@@ -114,9 +120,6 @@
 {
     NSDictionary *dict = [notification userInfo];
     int state = [[dict valueForKey:FSAudioStreamNotificationKey_State] intValue];
-    double playedTime = self.audioController.stream.currentTimePlayed.minute * 60
-                                + self.audioController.stream.currentTimePlayed.second;
-    
     switch (state) {
         case kFsAudioStreamRetrievingURL:
             [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
@@ -129,8 +132,6 @@
             
         case kFsAudioStreamStopped:
             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-            
-            [self.delegate audioStreamDidStop:playedTime];
             self.progressSlider.enabled = NO;
             self.playButton.hidden = NO;
             self.pauseButton.hidden = YES;
@@ -339,7 +340,6 @@
         self.progressSlider.enabled = YES;
         double s = self.audioController.stream.currentTimePlayed.minute * 60 + self.audioController.stream.currentTimePlayed.second;
         [self updatePlayTime:s];
-        [self.delegate audioStreamPlaying:s];
         
    }
 }
@@ -355,17 +355,15 @@
     }
     
     self.progressSlider.value = currentTime / durationTime;
-    int alreadyHour = (currentTime/3600);
-    int alreadyMinute = (currentTime-alreadyHour*3600)/60;
-    int alreadySecond = (currentTime-alreadyHour*3600-alreadyMinute*60);
     
-    int remainderTime = durationTime - currentTime;
-    int remainderHour = (remainderTime/3600);
-    int remainderMinute = (remainderTime-remainderHour*3600)/60;
-    int remainderSecond = (remainderTime-remainderHour*3600-remainderMinute*60);
+    timePosition playedTime = [PlayViewControllerHelper getPlayedTime:currentTime];
+    timePosition reminderTime = [PlayViewControllerHelper getremainderTimewithDurationTime:durationTime withPlayedTime:currentTime];
+   
+    self.alreadyPlayTime.text = [NSString stringWithFormat:@"%02i:%02i:%02i", playedTime.hour, playedTime.minute, playedTime.second];
+    self.remainderPlayTime.text = [NSString stringWithFormat:@"%02i:%02i:%02i",
+                                                reminderTime.hour, reminderTime.minute, reminderTime.second];
     
-    self.alreadyPlayTime.text = [NSString stringWithFormat:@"%02i:%02i:%02i", alreadyHour, alreadyMinute, alreadySecond];
-    self.remainderPlayTime.text = [NSString stringWithFormat:@"%02i:%02i:%02i", remainderHour, remainderMinute, remainderSecond];
+    [self.delegate audioStreamPlaying:currentTime withEpisode:self.episode];
 }
 
 - (void)playButtonPressed
@@ -383,6 +381,10 @@
 
 - (void)pauseButtonPressed
 {
+    double s = self.audioController.stream.currentTimePlayed.minute * 60
+                                + self.audioController.stream.currentTimePlayed.second;
+    
+    [self.delegate audioStreamWillPause:s];
     [self.audioController pause];
     self.isPaused = YES;
     self.pauseButton.hidden = YES;
@@ -435,7 +437,8 @@
     [self.progressUpdateTimer invalidate];
     self.progressUpdateTimer = nil;
     
-    double currentTime = self.audioController.stream.currentTimePlayed.minute * 60 + self.audioController.stream.currentTimePlayed.second;
+    double currentTime = self.audioController.stream.currentTimePlayed.minute * 60
+                                            + self.audioController.stream.currentTimePlayed.second;
     
     currentTime = currentTime + INTERVAL_TIME;
     [self updatePlayTime:currentTime];
@@ -451,7 +454,8 @@
     [self.progressUpdateTimer invalidate];
     self.progressUpdateTimer = nil;
     
-    double currentTime = self.audioController.stream.currentTimePlayed.minute * 60 + self.audioController.stream.currentTimePlayed.second;
+    double currentTime = self.audioController.stream.currentTimePlayed.minute * 60
+                                            + self.audioController.stream.currentTimePlayed.second;
     currentTime = currentTime - INTERVAL_TIME;
 
     [self updatePlayTime:currentTime];

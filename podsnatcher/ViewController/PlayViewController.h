@@ -14,19 +14,12 @@
 
 @protocol PlayViewControllerDelegate <NSObject>
 
-- (void)audioStreamPlaying:(double)playedTime;
-- (void)audioStreamDidStop:(double)playedTime;
-- (void)audioStreamDidPause:(double)playedTime;
-- (void)audioStreamDidPlay;
+- (void)audioStreamPlaying:(double)playedTime withEpisode:(IGEpisode *)episode;
+- (void)audioStreamWillStop:(double)playedTime withEpisode:(IGEpisode *)episode;
+- (void)audioStreamWillPause:(double)playedTime;
 
 @end
 @interface PlayViewController : podcastInfoViewController
-{
-    Podcast *_podcast;
-    IGEpisode *_episode;
-}
-
-@property (nonatomic, strong) Podcast *podcast;
 
 @property (nonatomic, strong) UILabel *remainderPlayTime;
 @property (nonatomic, strong) UILabel *alreadyPlayTime;

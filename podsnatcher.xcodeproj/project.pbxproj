@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3F4A6C59A924457DAC2B64F1 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B4FB3E81A61A40428939D839 /* libPods.a */; };
 		992CA472192B486800AD6D4A /* GGKUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 992CA470192B486800AD6D4A /* GGKUtilities.m */; };
+		9940BADC19312B1D0008DC7A /* PlayViewControllerHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 9940BADB19312B1D0008DC7A /* PlayViewControllerHelper.m */; };
 		9959BB6F1930BAD30083782A /* IGEpisode.m in Sources */ = {isa = PBXBuildFile; fileRef = 9959BB6E1930BAD30083782A /* IGEpisode.m */; };
 		99639C7D192E5A00008CDC10 /* EpisodeFileData.m in Sources */ = {isa = PBXBuildFile; fileRef = 99639C7C192E5A00008CDC10 /* EpisodeFileData.m */; };
 		9975A669192A7F89005022F2 /* PodcastDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 9975A666192A7F89005022F2 /* PodcastDownloader.m */; };
@@ -84,6 +85,8 @@
 		992CA46F192B486800AD6D4A /* GGKUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GGKUtilities.h; path = Utilites/GGKUtilities.h; sourceTree = "<group>"; };
 		992CA470192B486800AD6D4A /* GGKUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GGKUtilities.m; path = Utilites/GGKUtilities.m; sourceTree = "<group>"; };
 		992CA471192B486800AD6D4A /* UIControl_GGK.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UIControl_GGK.h; path = Utilites/UIControl_GGK.h; sourceTree = "<group>"; };
+		9940BADA19312B150008DC7A /* PlayViewControllerHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = PlayViewControllerHelper.h; path = ViewController/PlayViewControllerHelper.h; sourceTree = "<group>"; };
+		9940BADB19312B1D0008DC7A /* PlayViewControllerHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PlayViewControllerHelper.m; path = ViewController/PlayViewControllerHelper.m; sourceTree = "<group>"; };
 		9959BB6D1930BAD30083782A /* IGEpisode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGEpisode.h; path = Entities/IGEpisode.h; sourceTree = "<group>"; };
 		9959BB6E1930BAD30083782A /* IGEpisode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGEpisode.m; path = Entities/IGEpisode.m; sourceTree = "<group>"; };
 		99639C7B192E5A00008CDC10 /* EpisodeFileData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EpisodeFileData.h; path = Entities/EpisodeFileData.h; sourceTree = "<group>"; };
@@ -195,14 +198,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		992CA473192B487200AD6D4A /* Utilities */ = {
+		992CA473192B487200AD6D4A /* ViewUtilities */ = {
 			isa = PBXGroup;
 			children = (
 				992CA46F192B486800AD6D4A /* GGKUtilities.h */,
 				992CA470192B486800AD6D4A /* GGKUtilities.m */,
 				992CA471192B486800AD6D4A /* UIControl_GGK.h */,
 			);
-			name = Utilities;
+			name = ViewUtilities;
 			sourceTree = "<group>";
 		};
 		99304FBD19120F9100AB6E3B /* Model */ = {
@@ -220,6 +223,15 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		9940BAD31931221E0008DC7A /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				9940BADA19312B150008DC7A /* PlayViewControllerHelper.h */,
+				9940BADB19312B1D0008DC7A /* PlayViewControllerHelper.m */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
 		995AAC841908DCBC00FA2EBA /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -233,7 +245,7 @@
 				999BD228192B65CD00BE42CA /* PodcastListTableViewCell.m */,
 				999BD22B192B65CD00BE42CA /* SettingTableViewCell.h */,
 				999BD22C192B65CD00BE42CA /* SettingTableViewCell.m */,
-				992CA473192B487200AD6D4A /* Utilities */,
+				992CA473192B487200AD6D4A /* ViewUtilities */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -367,6 +379,7 @@
 				999BD23B192B68EE00BE42CA /* SearchViewController.m */,
 				999BD23C192B68EE00BE42CA /* SettingsViewController.h */,
 				999BD23D192B68EE00BE42CA /* SettingsViewController.m */,
+				9940BAD31931221E0008DC7A /* Utilities */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -561,6 +574,7 @@
 				999BD22D192B65CD00BE42CA /* JEProgressView.m in Sources */,
 				9975A669192A7F89005022F2 /* PodcastDownloader.m in Sources */,
 				999BD241192B68EE00BE42CA /* PodcastSwipeViewController.m in Sources */,
+				9940BADC19312B1D0008DC7A /* PlayViewControllerHelper.m in Sources */,
 				99B3AD3F1906128A00760D90 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

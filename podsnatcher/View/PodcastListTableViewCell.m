@@ -26,14 +26,15 @@
         
         self.layer.borderWidth = PODCASTLIST_BORDER;
         self.layer.borderColor = [cellBorderColor CGColor];
-        
         self.backgroundColor = cellbackgroundColor;
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.textColor = cellTextColor;
+        self.textLabel.textAlignment = NSTextAlignmentLeft;
         self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12];
         
         [self initImage];
         [self initDownloadProgressView];
+        [self initPlayedTimeLabelView];
     }
     
     return self;
@@ -43,6 +44,7 @@
 {
     self.imageView.image = [UIImage imageNamed:@"download"];
     self.imageView.tag = 1;
+    self.imageView.contentMode = UIViewContentModeLeft;
     self.imageView.userInteractionEnabled = YES;
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self
                                                                         action:@selector(podcastListTableViewCellImagePressed)];
@@ -57,6 +59,14 @@
     [self.downloadProgressView setTrackTintColor:[UIColor clearColor]];
     self.downloadProgressView.center = self.center;
     [self.contentView insertSubview:self.downloadProgressView atIndex:0];
+}
+
+- (void)initPlayedTimeLabelView
+{
+    self.playedTime = [[UILabel alloc] initWithFrame:CGRectMake(self.bounds.size.width - 90, 18, 80, 30)];
+    self.playedTime.textColor = [UIColor whiteColor];
+    self.playedTime.font = [UIFont systemFontOfSize:10];
+    [self.contentView addSubview:self.playedTime];
 }
 
 - (void)awakeFromNib

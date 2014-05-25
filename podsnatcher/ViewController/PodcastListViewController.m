@@ -15,6 +15,7 @@
 #import "PodcastModelManager.h"
 #import "PodcastDownloader.h"
 #import "UIControl_GGK.h"
+#import "PlayViewControllerHelper.h"
 
 @interface PodcastListViewController ()
 
@@ -24,7 +25,6 @@
 @property (nonatomic, strong) PodcastParseManager *parseManager;
 @property (nonatomic, assign) NSInteger currentEpisodePage;
 @property (nonatomic, strong) NSMutableDictionary *downloadingList;
-@property (nonatomic, strong) IGEpisode *currentEpisode;
 @property (nonatomic, strong) UIActivityIndicatorView *indicatorView;
 @end
 
@@ -250,6 +250,12 @@
             cell.imageView.tag = 0;
             cell.imageView.image = [UIImage imageNamed:@"cancel"];
         }
+        
+        if ([episode.playedTime intValue] > 0 && episode.isPlayed) {
+            timePosition time = [PlayViewControllerHelper getPlayedTime:[episode.playedTime doubleValue]];
+            cell.playedTime.text = [NSString stringWithFormat:@"%02i:%02i:%02i", time.hour, time.minute, time.second];
+            cell.textLabel.textColor = [UIColor whiteColor];
+        }
     }
     return cell;
 }
@@ -274,7 +280,7 @@
     self.playViewController.url = [NSURL URLWithString:episode.url];
     //self.parentViewController.contentType =
     self.playViewController.podcast = self.podcast;
-    self.currentEpisode = episode;
+    self.playViewController.episode = episode;
     [self.navigationController pushViewController:self.playViewController animated:YES];
     
 }
@@ -288,10 +294,15 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath
 {
     
+    if (!newIndexPath) {
+        return;
+    }
+
     UITableView *tableView = self.podcastListView;
     switch(type) {
         case NSFetchedResultsChangeUpdate:
-            [tableView reloadSections:[NSIndexSet indexSetWithIndex:newIndexPath.row] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView reloadSections:[NSIndexSet indexSetWithIndex:newIndexPath.row]
+                                            withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
         case NSFetchedResultsChangeInsert:
@@ -488,10 +499,10 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        if (self.categroyItem.selectedSegmentIndex != UISegmentedControlNoSegment) {
-            [self segmentedControlSelected];
-        } else {
+        if (self.categroyItem.selectedSegmentIndex == UISegmentedControlNoSegment) {
             [self segmentedControlUnSelected];
+        } else {
+            [self segmentedControlSelected];
         }
     });
 }
@@ -508,8 +519,6 @@
 {
     NSManagedObjectContext *tempContext = self.modelManager.temporaryManagedObjectContext;
     [tempContext performBlock:^{
-        self.currentEpisode.isPlayed = @YES;
-        
         NSError *Error = nil;
         if ([tempContext save:&Error]) {
             [self.modelManager saveContextWithWait:NO];
@@ -522,16 +531,41 @@
 }
 
 
-- (void)audioStreamPlaying:(double)playedTime
+- (void)audioStreamPlaying:(double)playedTime withEpisode:(IGEpisode *)episode
 {
-    
+    NSIndexPath *indexPath = [self.episodeFRC indexPathForObject:episode];
+    if (indexPath) {
+        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:indexPath.row];
+        PodcastListTableViewCell *cell = (PodcastListTableViewCell *)[self.podcastListView cellForRowAtIndexPath:index];
+        
+        timePosition time = [PlayViewControllerHelper getPlayedTime:playedTime];
+        cell.playedTime.text = [NSString stringWithFormat:@"%02i:%02i:%02i", time.hour, time.minute, time.second];
+        
+        cell.textLabel.textColor = [UIColor whiteColor];
+    }
 }
-- (void)audioStreamDidStop:(double)playedTime
+
+- (void)audioStreamWillStop:(double)playedTime withEpisode:(IGEpisode *)episode
 {
-    
+    NSManagedObjectContext *tempContext = self.modelManager.temporaryManagedObjectContext;
+    [tempContext performBlock:^{
+        episode.playedTime = [NSNumber numberWithDouble:playedTime];
+        
+        NSError *Error = nil;
+        if ([tempContext save:&Error]) {
+            [self.modelManager saveContextWithWait:NO];
+            NSLog(@"success to update episode");
+        } else {
+            NSLog(@"Failed to save the managerd object context");
+        }
+        
+    }];   
 }
-- (void)audioStreamDidPause:(double)playedTime
-{
-    
-}
+
+//- (void)audioStreamWillPause:(double)playedTime
+//{
+//    [self updatePlayTime:playedTime];
+//}
+
+
 @end
