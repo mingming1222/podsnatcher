@@ -16,7 +16,7 @@
 
 - (void)audioStreamPlaying:(double)playedTime withEpisode:(IGEpisode *)episode;
 - (void)audioStreamWillStop:(double)playedTime withEpisode:(IGEpisode *)episode;
-- (void)audioStreamWillPause:(double)playedTime;
+- (void)audioStreamWillPause:(double)playedTime withEpisode:(IGEpisode *)episode;
 
 @end
 @interface PlayViewController : podcastInfoViewController

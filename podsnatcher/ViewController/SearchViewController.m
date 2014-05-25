@@ -67,10 +67,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [self.searchController setActive:YES animated:NO];
     [self.searchController.searchBar becomeFirstResponder];
 }
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [self.searchController setActive:NO animated:NO];
     [self.searchController.searchBar resignFirstResponder];
 }
 

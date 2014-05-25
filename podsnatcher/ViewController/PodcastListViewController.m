@@ -305,13 +305,13 @@
                                             withRowAnimation:UITableViewRowAnimationAutomatic];
             break;
             
-        case NSFetchedResultsChangeInsert:
-            [tableView insertSections:[NSIndexSet indexSetWithIndex:newIndexPath.row] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteSections:[NSIndexSet indexSetWithIndex:newIndexPath.row] withRowAnimation:UITableViewRowAnimationFade];
-            break;
+//        case NSFetchedResultsChangeInsert:
+//            [tableView insertSections:[NSIndexSet indexSetWithIndex:newIndexPath.row] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
+//            
+//        case NSFetchedResultsChangeDelete:
+//            [tableView deleteSections:[NSIndexSet indexSetWithIndex:newIndexPath.row] withRowAnimation:UITableViewRowAnimationFade];
+//            break;
     }
 }
 
@@ -547,25 +547,30 @@
 
 - (void)audioStreamWillStop:(double)playedTime withEpisode:(IGEpisode *)episode
 {
+    [self updatePlayedTime:playedTime withEpisode:episode];
+}
+- (void)audioStreamWillPause:(double)playedTime withEpisode:(IGEpisode *)episode
+{
+    [self updatePlayedTime:playedTime withEpisode:episode];
+}
+
+- (void)updatePlayedTime:(double)playedTime withEpisode:(IGEpisode *)episode
+{
+    
     NSManagedObjectContext *tempContext = self.modelManager.temporaryManagedObjectContext;
     [tempContext performBlock:^{
         episode.playedTime = [NSNumber numberWithDouble:playedTime];
         
         NSError *Error = nil;
         if ([tempContext save:&Error]) {
-            [self.modelManager saveContextWithWait:NO];
+            [self.modelManager saveContextWithWait:YES];
             NSLog(@"success to update episode");
         } else {
             NSLog(@"Failed to save the managerd object context");
         }
         
-    }];   
+    }];
 }
-
-//- (void)audioStreamWillPause:(double)playedTime
-//{
-//    [self updatePlayTime:playedTime];
-//}
 
 
 @end

@@ -26,12 +26,21 @@
 
 @property (nonatomic, strong) PodcastModelManager *modelManager;
 @property (nonatomic, strong) PodcastParseManager *parseManager;
+@property (nonatomic, strong) SearchViewController *searchViewController;
 
 
 @end
 
 @implementation SettingsViewController
 
+- (SearchViewController *)searchViewController
+{
+    if (!_searchViewController) {
+        _searchViewController = [[SearchViewController alloc] init];
+        _searchViewController.delegate = self;
+    }
+    return _searchViewController;
+}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -79,9 +88,7 @@
 
 - (void)addNewPodcastPressed
 {
-    SearchViewController *svc = [[SearchViewController alloc] init];
-    svc.delegate = self;
-    [self presentViewController:svc animated:YES completion:nil];
+    [self presentViewController:self.searchViewController animated:YES completion:nil];
 }
 
 - (void)closeButtonPressed

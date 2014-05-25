@@ -62,7 +62,7 @@
 {
     [super viewDidAppear:animated];
     
-    if (![self.currentEpisode.url isEqual:self.url]) {
+    if (![self.currentEpisode.url isEqual:[self.url absoluteString]]) {
 
         if (self.audioController.isPlaying) {
             
@@ -384,7 +384,7 @@
     double s = self.audioController.stream.currentTimePlayed.minute * 60
                                 + self.audioController.stream.currentTimePlayed.second;
     
-    [self.delegate audioStreamWillPause:s];
+    [self.delegate audioStreamWillPause:s withEpisode:self.currentEpisode];
     [self.audioController pause];
     self.isPaused = YES;
     self.pauseButton.hidden = YES;
